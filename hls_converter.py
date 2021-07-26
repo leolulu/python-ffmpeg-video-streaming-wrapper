@@ -19,7 +19,7 @@ def hls_convert(input_file_path):
 
     # convert
     video = ffmpeg_streaming.input(input_file_path)
-    hls = video.hls(Formats.h264())
+    hls = video.hls(Formats.h264(), hls_time=1)
     hls.auto_generate_representations()
     hls.output(output_file_path, monitor=monitor)
 
