@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="plyr.js"></script>
+    <script src="hls.min.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="plyr.css" />
+    <link rel="stylesheet" href="style.css">
+    <title>Plyr</title>
+</head>
+
+<body>
+    <div>
+        <div class="container">
+            <video controls crossorigin playsinline
+                poster="https://files.yande.re/image/cd0483d7482cddbf2af8ffd970c10c54/yande.re%20808932%20mashu_%28003%29%20see_through%20wallpaper.jpg"
+                id="video1"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+        </div>
+        <div class="form-container">
+            <input type="text" name="m3u8_url" id="url_input1" class="url_input">
+            <input type="button" value="更新视频url" id="reload_url1" class="btn">
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <video controls crossorigin playsinline
+                poster="https://files.yande.re/image/fbb568e3c1472b2eb945f1038093aa04/yande.re%20798098%20agent_%28girls_frontline%29%20ass%20douya_%28233%29%20dress%20girls_frontline%20heels%20horns%20judge_%28girls_frontline%29%20maid%20no_bra%20nopan%20pantyhose%20skirt_lift%20wallpaper.jpg"
+                id="video2"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+        </div>
+        <div class="form-container">
+            <input type="text" name="m3u8_url" id="url_input2" class="url_input">
+            <input type="button" value="更新视频url" id="reload_url2" class="btn">
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <video controls crossorigin playsinline
+                poster="https://files.yande.re/jpeg/9e8769102cb60b9d97568974fba6e0a8/yande.re%20796263%20asian_clothes%20bali%20destiny_child%20no_bra%20see_through%20wallpaper%20zig90.jpg"
+                id="video3"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+        </div>
+        <div class="form-container">
+            <input type="text" name="m3u8_url" id="url_input3" class="url_input">
+            <input type="button" value="更新视频url" id="reload_url3" class="btn">
+        </div>
+    </div>
+</body>
+
+<script>
+    function load_m3u8_url(video_node_id) {
+        console.log("函数load_m3u8_url调用：" + video_node_id)
+        const video = document.querySelector(video_node_id);
+
+        // For more options see: https://github.com/sampotts/plyr/#options
+        // captions.update is required for captions to work with hls.js
+        const player = new Plyr(video, {
+            captions: {
+                active: true,
+                update: true,
+                language: 'en'
+            }
+        });
+
+        if (!Hls.isSupported()) {
+            video.src = window.source;
+        } else {
+            // For more Hls.js options, see https://github.com/dailymotion/hls.js
+            const hls = new Hls();
+            hls.loadSource(window.source);
+            hls.attachMedia(video);
+            window.hls = hls;
+
+            // Handle changing captions
+            player.on('languagechange', () => {
+                // Caption support is still flaky. See: https://github.com/sampotts/plyr/issues/994
+                setTimeout(() => hls.subtitleTrack = player.currentTrack, 50);
+            });
+        }
+
+        // Expose player so it can be used from the console
+        window.player = player;
+    }
+    document.addEventListener('DOMContentLoaded', load_m3u8_url);
+
+    var btn1 = document.getElementById("reload_url1")
+    var url_input1 = document.getElementById("url_input1")
+    btn1.onclick = function () {
+        console.log("当前输入框的url：" + url_input1.value)
+        window.source = url_input1.value
+        load_m3u8_url("#video1")
+    }
+    var btn2 = document.getElementById("reload_url2")
+    var url_input2 = document.getElementById("url_input2")
+    btn2.onclick = function () {
+        console.log("当前输入框的url：" + url_input2.value)
+        window.source = url_input2.value
+        load_m3u8_url("#video2")
+    }
+    var btn3 = document.getElementById("reload_url3")
+    var url_input3 = document.getElementById("url_input3")
+    btn3.onclick = function () {
+        console.log("当前输入框的url：" + url_input3.value)
+        window.source = url_input3.value
+        load_m3u8_url("#video3")
+    }
+</script>
+
+</html>

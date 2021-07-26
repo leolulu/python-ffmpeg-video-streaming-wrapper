@@ -1,0 +1,55 @@
+.url_input {
+    width: 70%;
+}
+
+.container {
+    margin: 5px auto;
+    width: 100%;
+}
+
+.form-container {
+    margin: 5px auto;
+    width: 100%;
+}
+
+video {
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.btn {
+    font-size: 17px;
+    font-family: 'Source Sans Pro', sans-serif;
+    border: none;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 5px 10px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #04AA6D;
+    color: #ffffff
+}
+
+.url_input {
+    border: 2px solid #1b1b1b;
+    color: #1b1b1b;
+    min-width: 60px;
+    padding: 6px 12px;
+    margin: 0px 5px;
+}
