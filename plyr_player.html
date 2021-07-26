@@ -8,7 +8,7 @@
     <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
     <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
-    <title>Document</title>
+    <title>Plyr</title>
 </head>
 
 <body>
@@ -16,11 +16,24 @@
         <video controls crossorigin playsinline
             poster="https://bitdash-a.akamaihd.net/content/sintel/poster.png"></video>
     </div>
+    <div class="form-container">
+        <input type="text" name="m3u8_url" id="url_input">
+        <input type="button" value="更新视频url" id="reload_url">
+    </div>
 </body>
 <style>
+    #url_input {
+        width: 80%;
+    }
+
     .container {
         margin: 5px auto;
-        width: 99%;
+        width: 100%;
+    }
+
+    .form-container {
+        margin: 5px auto;
+        width: 100%;
     }
 
     video {
@@ -34,8 +47,9 @@
     }
 </style>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const source = 'http://12345.dd111.xyz:12345/TownhallMeeting_AnswerNewQuestions.m3u8';
+    window.source = "http://12345.dd111.xyz:12345/TownhallMeeting_AnswerNewQuestions.m3u8";
+
+    function load_m3u8_url() {
         const video = document.querySelector('video');
 
         // For more options see: https://github.com/sampotts/plyr/#options
@@ -49,11 +63,11 @@
         });
 
         if (!Hls.isSupported()) {
-            video.src = source;
+            video.src = window.source;
         } else {
             // For more Hls.js options, see https://github.com/dailymotion/hls.js
             const hls = new Hls();
-            hls.loadSource(source);
+            hls.loadSource(window.source);
             hls.attachMedia(video);
             window.hls = hls;
 
@@ -66,7 +80,16 @@
 
         // Expose player so it can be used from the console
         window.player = player;
-    });
+    }
+    document.addEventListener('DOMContentLoaded', load_m3u8_url);
+
+    var btn = document.getElementById("reload_url")
+    var url_input = document.getElementById("url_input")
+    btn.onclick = function () {
+        console.log("当前输入框的url：" + url_input.value)
+        window.source = url_input.value
+        load_m3u8_url()
+    }
 </script>
 
 </html>
