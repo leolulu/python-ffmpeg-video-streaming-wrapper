@@ -18,10 +18,15 @@ def hls_convert(input_file_path):
     output_file_path = os.path.join(working_dir, output_file_name)
 
     # convert
-    video = ffmpeg_streaming.input(input_file_path)
-    hls = video.hls(Formats.h264(), hls_time=1)
-    hls.auto_generate_representations()
-    hls.output(output_file_path, monitor=monitor)
+    try:
+        video = ffmpeg_streaming.input(input_file_path)
+        hls = video.hls(Formats.h264(), hls_time=1)
+        hls.auto_generate_representations()
+        hls.output(output_file_path, monitor=monitor)
+    except UnicodeDecodeError as e:
+        os.rmdir(working_dir)
+        raise e
+
 
 
 def monitor(ffmpeg, duration, time_, time_left, process):
