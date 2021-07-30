@@ -3,7 +3,6 @@ import os
 import re
 import shutil
 import sys
-from time import sleep
 
 import ffmpeg_streaming
 from ffmpeg_streaming import Formats
@@ -22,7 +21,6 @@ def hls_convert(input_file_path):
         print("重命名：", input_file_path, "==>", input_file_path_new)
         os.rename(input_file_path, input_file_path_new)
         input_file_path = input_file_path_new
-    sleep(5)
 
     # prepare
     base_dir = os.path.dirname(input_file_path)
