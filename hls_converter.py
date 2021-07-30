@@ -1,25 +1,14 @@
-import datetime
-import os
-import re
-import shutil
-import sys
-
 import ffmpeg_streaming
 from ffmpeg_streaming import Formats
+import os
+import shutil
+import sys
+import datetime
 
 
 def hls_convert(input_file_path):
-    # rename
-    input_file_path = os.path.abspath(input_file_path)
-    input_file_path_new = os.path.join(
-        os.path.dirname(input_file_path),
-        re.sub(r'[^A-Za-z0-9._-]', '', os.path.basename(input_file_path))
-    )
-    os.rename(input_file_path, input_file_path_new)
-    print("重命名：", input_file_path, "->", input_file_path_new)
-    input_file_path = input_file_path_new
-
     # prepare
+    input_file_path = os.path.abspath(input_file_path)
     base_dir = os.path.dirname(input_file_path)
     input_file_name = os.path.splitext(os.path.basename(input_file_path))[0]
     working_dir = os.path.join(base_dir, input_file_name)
@@ -37,6 +26,7 @@ def hls_convert(input_file_path):
     except UnicodeDecodeError as e:
         os.rmdir(working_dir)
         raise e
+
 
 
 def monitor(ffmpeg, duration, time_, time_left, process):
@@ -88,5 +78,5 @@ def monitor(ffmpeg, duration, time_, time_left, process):
 
 if __name__ == "__main__":
     input_file_path = sys.argv[1]
-    print("输入文件：", input_file_path)
+    print("输入文件：",input_file_path)
     hls_convert(input_file_path)
