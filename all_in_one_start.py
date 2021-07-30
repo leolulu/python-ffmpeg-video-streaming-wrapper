@@ -36,7 +36,7 @@ app.layout = html.Div([
 
 
 @app.callback(
-    dash.dependencies.Output('nl1', 'children'),
+    dash.dependencies.Output('ul1', 'children'),
     dash.dependencies.Input('ul1', 'n_clicks')
 )
 def refresh_m3u8_list(n_clicks):

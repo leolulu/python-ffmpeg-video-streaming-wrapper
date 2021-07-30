@@ -1,9 +1,9 @@
+import datetime
+import os
+import sys
+
 import ffmpeg_streaming
 from ffmpeg_streaming import Formats
-import os
-import shutil
-import sys
-import datetime
 
 
 def hls_convert(input_file_path):
@@ -20,13 +20,12 @@ def hls_convert(input_file_path):
     # convert
     try:
         video = ffmpeg_streaming.input(input_file_path)
-        hls = video.hls(Formats.h264(), hls_time=1)
+        hls = video.hls(Formats.h264(), hls_time=1, force_key_frames="expr:gte(t,n_forced*1)")
         hls.auto_generate_representations()
         hls.output(output_file_path, monitor=monitor)
     except UnicodeDecodeError as e:
         os.rmdir(working_dir)
         raise e
-
 
 
 def monitor(ffmpeg, duration, time_, time_left, process):
@@ -78,5 +77,5 @@ def monitor(ffmpeg, duration, time_, time_left, process):
 
 if __name__ == "__main__":
     input_file_path = sys.argv[1]
-    print("输入文件：",input_file_path)
+    print("输入文件：", input_file_path)
     hls_convert(input_file_path)
