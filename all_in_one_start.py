@@ -28,11 +28,17 @@ app.layout = html.Div([
         style={'margin': '30px auto'}
     ),
     html.Div(
-        html.Ul(
-            [html.Li(html.A(os.path.basename(i), href=i)) for i in get_img_path_list()]
-        )
+        html.Ul([], id='ul1')
     )
 ])
+
+
+@app.callback(
+    dash.dependencies.Output('nl1', 'children'),
+    dash.dependencies.Input('ul1', 'n_clicks')
+)
+def refresh_m3u8_list(n_clicks):
+    return [html.Li(html.A(os.path.basename(i), href=i)) for i in get_img_path_list()]
 
 
 if __name__ == '__main__':
