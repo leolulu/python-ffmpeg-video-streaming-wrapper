@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import os
+import re
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(
@@ -17,6 +18,7 @@ def get_img_path_list():
         for file_ in files_:
             if os.path.splitext(file_)[-1] == '.m3u8':
                 m3u8_list.append(os.path.join(root, file_).replace('\\', '/'))
+    m3u8_list = [i for i in m3u8_list if not re.search(r"_\d{3,4}p",i)]
     m3u8_list.sort(key=lambda x: os.path.basename(x))
     print(m3u8_list)
     return m3u8_list
@@ -24,7 +26,7 @@ def get_img_path_list():
 
 app.layout = html.Div([
     html.Div(
-        html.A("==> Player <==", href='./static/plyr_player.html', target='_blank'),
+        html.A("===> Player <===", href='./static/plyr_player.html', target='_blank'),
         style={'margin': '30px auto'}
     ),
     html.Div(
