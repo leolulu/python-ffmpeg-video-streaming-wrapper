@@ -45,7 +45,7 @@ class Process(object):
             'stdout': subprocess.PIPE,
             'stderr': subprocess.STDOUT,
             'universal_newlines': False,
-            'encoding': 'utf-8'
+            'encoding': 'ISO-8859-1'
         }
         default_proc_opts.update(options)
         options.update(default_proc_opts)

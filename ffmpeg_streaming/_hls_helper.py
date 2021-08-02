@@ -129,4 +129,4 @@ class HLSMasterPlaylist:
         """
         @TODO: add documentation
         """
-        return ["{}_{}p.m3u8".format(os.path.basename(self.media.output_).split('.')[0], rep.size.height)]
+        return ["{}_{}p.m3u8".format(os.path.basename(self.media.output_).rsplit('.', 1)[0], rep.size.height)]
