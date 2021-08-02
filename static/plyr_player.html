@@ -15,10 +15,8 @@
 <body>
     <div>
         <div class="container">
-            <video controls crossorigin playsinline
-                poster="assets/poster3.jpg"
-                id="video1"
-                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+            <video controls crossorigin playsinline poster="assets/poster3.jpg" id="video1"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}'></video>
         </div>
         <div class="form-container">
             <input type="text" name="m3u8_url" id="url_input1" class="url_input">
@@ -27,10 +25,8 @@
     </div>
     <div>
         <div class="container">
-            <video controls crossorigin playsinline
-                poster="assets/poster2.jpg"
-                id="video2"
-                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+            <video controls crossorigin playsinline poster="assets/poster2.jpg" id="video2"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}'></video>
         </div>
         <div class="form-container">
             <input type="text" name="m3u8_url" id="url_input2" class="url_input">
@@ -39,10 +35,8 @@
     </div>
     <div>
         <div class="container">
-            <video controls crossorigin playsinline
-                poster="assets/poster1.jpg"
-                id="video3"
-                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},"quality": {"default": 1080,"options": [2160, 1440, 1080, 720, 576, 480, 360, 240]}}'></video>
+            <video controls crossorigin playsinline poster="assets/poster1.jpg" id="video3"
+                data-plyr-config='{"settings": ["captions", "quality", "speed", "loop"], "autoplay": true, "clickToPlay": false, "speed": {"selected": 1, "options": [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}'></video>
         </div>
         <div class="form-container">
             <input type="text" name="m3u8_url" id="url_input3" class="url_input">
@@ -52,61 +46,78 @@
 </body>
 
 <script>
-    function load_m3u8_url(video_node_id) {
-        console.log("函数load_m3u8_url调用：" + video_node_id)
+    function load_m3u8_url(video_node_id, source_url) {
+        console.log("函数load_m3u8_url调用：" + video_node_id + "，输入url：" + source_url)
         const video = document.querySelector(video_node_id);
-
-        // For more options see: https://github.com/sampotts/plyr/#options
-        // captions.update is required for captions to work with hls.js
-        const player = new Plyr(video, {
-            captions: {
-                active: true,
-                update: true,
-                language: 'en'
-            }
-        });
+        const defaultOptions = {}
 
         if (!Hls.isSupported()) {
-            video.src = window.source;
+            video.src = source_url;
+            var player = new Plyr(video, defaultOptions);
         } else {
-            // For more Hls.js options, see https://github.com/dailymotion/hls.js
             const hls = new Hls();
-            hls.loadSource(window.source);
+            hls.loadSource(source_url);
+            hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                const availableQualities = hls.levels.map((l) => l.height)
+                availableQualities.unshift(0)
+                defaultOptions.quality = {
+                    default: 0,
+                    options: availableQualities,
+                    forced: true,
+                    onChange: (e) => updateQuality(e),
+                }
+                defaultOptions.i18n = {
+                    qualityLabel: {
+                        0: 'Auto',
+                    },
+                }
+                hls.on(Hls.Events.LEVEL_SWITCHED, function (event, data) {
+                    var span = document.querySelector(
+                        ".plyr__menu__container [data-plyr='quality'][aria-checked='true'] span")
+                    if (hls.autoLevelEnabled) {
+                        // span.innerHTML = `AUTO (${hls.levels[data.level].height}p)`
+                        console.log("自动切换到分辨率：" + hls.levels[data.level].height)
+                    } else {
+                        // span.innerHTML = `AUTO`
+                    }
+                })
+                var player = new Plyr(video, defaultOptions);
+            });
             hls.attachMedia(video);
             window.hls = hls;
-
-            // Handle changing captions
-            player.on('languagechange', () => {
-                // Caption support is still flaky. See: https://github.com/sampotts/plyr/issues/994
-                setTimeout(() => hls.subtitleTrack = player.currentTrack, 50);
-            });
         }
 
-        // Expose player so it can be used from the console
-        window.player = player;
+        function updateQuality(newQuality) {
+            if (newQuality === 0) {
+                window.hls.currentLevel = -1;
+            } else {
+                window.hls.levels.forEach((level, levelIndex) => {
+                    if (level.height === newQuality) {
+                        console.log("匹配分辨率：" + newQuality);
+                        window.hls.currentLevel = levelIndex;
+                    }
+                });
+            }
+        }
     }
-    document.addEventListener('DOMContentLoaded', load_m3u8_url);
 
     var btn1 = document.getElementById("reload_url1")
     var url_input1 = document.getElementById("url_input1")
     btn1.onclick = function () {
         console.log("当前输入框的url：" + url_input1.value)
-        window.source = url_input1.value
-        load_m3u8_url("#video1")
+        load_m3u8_url("#video1", url_input1.value)
     }
     var btn2 = document.getElementById("reload_url2")
     var url_input2 = document.getElementById("url_input2")
     btn2.onclick = function () {
         console.log("当前输入框的url：" + url_input2.value)
-        window.source = url_input2.value
-        load_m3u8_url("#video2")
+        load_m3u8_url("#video2", url_input2.value)
     }
     var btn3 = document.getElementById("reload_url3")
     var url_input3 = document.getElementById("url_input3")
     btn3.onclick = function () {
         console.log("当前输入框的url：" + url_input3.value)
-        window.source = url_input3.value
-        load_m3u8_url("#video3")
+        load_m3u8_url("#video3", url_input3.value)
     }
 </script>
 
