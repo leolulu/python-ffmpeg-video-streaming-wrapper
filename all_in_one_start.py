@@ -26,7 +26,7 @@ def get_img_path_list():
 
 app.layout = html.Div([
     html.Div(
-        html.A("===> Player <===", href='./static/plyr_player.html', target='_blank'),
+        html.A("===> Player <===", href='./static/plyr_player.html', target='_self'),
         style={'margin': '30px auto'}
     ),
     html.Div(
