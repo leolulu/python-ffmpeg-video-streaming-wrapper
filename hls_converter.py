@@ -20,7 +20,7 @@ def hls_convert(input_file_path):
     # convert
     try:
         video = ffmpeg_streaming.input(input_file_path)
-        hls = video.hls(Formats.h264(), hls_time=1, force_key_frames="expr:gte(t,n_forced*1)")
+        hls = video.hls(Formats.h264(), hls_time=6, force_key_frames="expr:gte(t,n_forced*6)")
         hls.auto_generate_representations()
         hls.output(output_file_path, monitor=monitor)
     except UnicodeDecodeError as e:
