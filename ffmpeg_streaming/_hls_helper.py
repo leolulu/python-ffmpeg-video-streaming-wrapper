@@ -113,7 +113,7 @@ class HLSMasterPlaylist:
         """
         content = ['#EXTM3U'] + self._get_version() + self.media.options.get('description', [])
 
-        for rep in self.media.reps:
+        for rep in list(self.media.reps)[::-1]:
             content += stream_info(rep) + self.stream_path(rep)
 
         return "\n".join(content)

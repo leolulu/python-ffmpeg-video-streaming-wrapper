@@ -55,7 +55,13 @@
             video.src = source_url;
             var player = new Plyr(video, defaultOptions);
         } else {
-            const hls = new Hls();
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true,
+                maxBufferSize: 128 * 1000 * 1000,
+                maxBufferLength: 120,
+                progressive: true,
+            });
             hls.loadSource(source_url);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                 const availableQualities = hls.levels.map((l) => l.height)
