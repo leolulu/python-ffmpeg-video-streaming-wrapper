@@ -60,7 +60,7 @@
                 lowLatencyMode: true,
                 maxBufferSize: 128 * 1000 * 1000,
                 maxBufferLength: 120,
-                progressive: true,
+                progressive: false,
             });
             hls.loadSource(source_url);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
