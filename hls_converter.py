@@ -1,5 +1,7 @@
 import datetime
 import os
+import re
+import shutil
 import sys
 
 import ffmpeg_streaming
@@ -7,8 +9,17 @@ from ffmpeg_streaming import Formats
 
 
 def hls_convert(input_file_path):
-    # prepare
+    # rename
     input_file_path = os.path.abspath(input_file_path)
+    input_file_path_new = os.path.join(
+        os.path.dirname(input_file_path),
+        re.sub(r'[^A-Za-z0-9._-]', '', os.path.basename(input_file_path))
+    )
+    os.rename(input_file_path, input_file_path_new)
+    print("重命名：", input_file_path, "->", input_file_path_new)
+    input_file_path = input_file_path_new
+
+    # prepare
     base_dir = os.path.dirname(input_file_path)
     input_file_name = os.path.splitext(os.path.basename(input_file_path))[0]
     working_dir = os.path.join(base_dir, input_file_name)
