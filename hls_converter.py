@@ -14,7 +14,7 @@ def hls_convert(input_file_path):
     input_file_path = os.path.abspath(input_file_path)
     input_file_path_new = os.path.join(
         os.path.dirname(input_file_path),
-        re.sub(r'[^A-Za-z0-9._-]', '', os.path.basename(input_file_path))
+        re.sub(r'[ %#]', '_', os.path.basename(input_file_path))
     )
     if input_file_path == input_file_path_new:
         print("不用重命名...")
