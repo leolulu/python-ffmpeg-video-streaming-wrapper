@@ -44,4 +44,4 @@ def refresh_m3u8_list(n_clicks):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=12345, debug=False)
+    app.run_server(host='0.0.0.0', port=12346, debug=False)
